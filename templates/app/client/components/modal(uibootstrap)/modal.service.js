@@ -68,6 +68,43 @@ export function Modal($rootScope, $uibModal) {
           });
         };
       }
+    },
+
+    /* Alert modals */
+    message: {
+
+      /**
+       * Create a function to open a alert modal (ex. ng-click='myModalFn(message, arg1, arg2...)')
+       * @param  {Function} al - callback, ran when alert modal is closed
+       * @return {Function}     - the function to open the modal (ex. myModalFn)
+       */
+      alert(al = angular.noop) {
+        /**
+         * Open a alert modal
+         * @param  {String} message   - message or info to show on modal
+         */
+        return function(message) {
+          var args = Array.prototype.slice.call(arguments),
+            alertModal;
+
+          alertModal = openModal({
+            modal: {
+              html: '<p>' + message + '</p>',
+              buttons: [{
+                classes: 'btn-default',
+                text: 'Ok',
+                click: function(e) {
+                  alertModal.close(e);
+                }
+              }]
+            }
+          }, 'modal-default');
+
+          alertModal.result.then(function(event) {
+            al.apply(event, args);
+          });
+        };
+      }
     }
   };
 }
